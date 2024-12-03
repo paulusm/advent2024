@@ -10,54 +10,49 @@ input <- read_table("2024-12-02/input.txt", col_names = FALSE, show_col_types = 
 # Had to cheat by swapping a row in the input file. If the first row didn't have 8 cols
 #it only read in 7
 
+#242
+
+parse <- function(row){
+    row <- row[!is.na(row)]
+    row <- as.list(row)
+    names(row) <- NULL
+    unsafe <- c()
+    parseResult <- (row |> imap( \(x, idx){
+        if(idx == length(row)) return( idx)
+        y <-  row[[idx + 1]]
+        if(idx > 1) z <-  row[[idx - 1]] else z = NA
+        if(abs(x - y) > 3) unsafe <<- c(unsafe,idx + 1)
+        if( x == y) unsafe <<- c(unsafe,idx + 1)
+        if(idx > 1){
+           if((y > x & z > x) | (y < x & z < x)) unsafe <<- c(unsafe,idx)
+        }
+        return(idx)
+    }))
+    return(unsafe)
+}
+
+#print(parse(input[4,]))
+
 resultList <- input |> group_by(row_number()) |>
     group_map(\(x, i) {
-        x <- x[!is.na(x)]
-        x |> reduce2(c(x[3:length(x)],999), \(x, y, z){
-            if(abs(x - y) > 3){return(done(FALSE))}
-            if( x == y) {return(done(FALSE))}
-            if(z == 999) return(done(TRUE))
-            if((y > x & z < y) | (y < x & z > y)) {return(done(FALSE))}
-            return (y)
-        })
+        result <- (parse(x))
+        return(length(result) == 0)
     })
+
 
 input$safe <- resultList
 resultList[resultList == TRUE] |> length() |> print()
 
-# Part Two, TODO: Refactor!
-# 278 is too low
+# Part Two, not working
+# 278 is too low, 316 is too high!
 input <- read_table("2024-12-02/input.txt", col_names = FALSE, show_col_types = FALSE, )
 
 resultList <- input |> group_by(row_number()) |>
     group_map(\(x, i) {
-        x <- x[!is.na(x)]
-        #print(x)
-        parse1 <- x |> reduce2(c(x[3:length(x)],999), \(x, y, z, pos = 0){
-            pos <- pos + 1
-            print(pos)
-            if(abs(x - y) > 3){return(done(list(FALSE, pos)) )}
-            if( x == y) {return(done(list(FALSE, pos)))}
-            if(z == 999) return(done(list(TRUE, pos)))
-            if((y > x & z < y) | (y < x & z > y)) {return(done(list(FALSE, pos)))}
-            return (y)
-        })
-
-        if(parse1[[1]] == FALSE){
-            pos <- parse1[[2]]
-            print(pos)
-            x <- x[-pos]
-            print(x)
-            parse2 <<- x |> reduce2(c(x[3:length(x)],999), \(x, y, z, pos = 0){
-                if(abs(x - y) > 3){return(done(list(FALSE, pos)) )}
-                if( x == y) {return(done(list(FALSE, pos)))}
-                if(z == 999) return(done(list(TRUE, pos)))
-                if((y > x & z < y) | (y < x & z > y)) {return(done(list(FALSE, pos)))}
-                return (y)
-            })
-        }
-        return(parse1[[1]] | parse2[[1]])
+        result <- (parse(x))
+        return(length(result) < 2)
     })
+
 
 input$safe <- resultList
 resultList[resultList == TRUE] |> length() |> print()
