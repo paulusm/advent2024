@@ -14,11 +14,11 @@ program2 <- read_file("2024-12-03/input.txt")
 dontsplit <- str_split(program2, "don't\\(\\)")
 goodparts <- dontsplit[[1]][1]
 badparts <- dontsplit[[1]][-1]
-view(badparts)
+
 dosplit <- str_split(badparts, "do\\(\\)")
 moregoodparts <- dosplit |> map(\(x) return(x[-1])) |> reduce(\(x, y) return(c(x, y)) )
 goodparts <- c(goodparts, moregoodparts)
-view(goodparts)
+
 goodparts |> map(\(x) {
     if(length(x) == 0) return(0)
     matches <- x |> str_match_all("mul\\((\\d+),(\\d+)\\)")
