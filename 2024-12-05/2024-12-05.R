@@ -1,4 +1,7 @@
 library(readr)
+library(purrr)
+library(dplyr)
+library(stringr)
 
 input <- read_file("2024-12-05/input.txt") |> str_split("\\n\\n")
 
