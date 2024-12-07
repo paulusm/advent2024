@@ -11,3 +11,5 @@
 [5th, part one OK, part two OK](2024-12-05/2024-12-05.R)
 
 [6th, Part one only](2024-12-06/2024-12-06.R)
+
+[7th, Part one only, Part two close but no cigar](2024-12-07/2024-12-07.R)
