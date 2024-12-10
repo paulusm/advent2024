@@ -2,9 +2,12 @@ library(readr)
 library(stringr)
 library(dplyr)
 library(purrr)
+library(tidyr)
 
-input <- read_file("2024-12-09/test.txt") |> str_split("") |> pluck(1)
-flatSystem <- input |> imap(\(x, i) {
+
+input<- read_file("2024-12-09/input.txt") |> str_split("") |> pluck(1)
+fileSystem <- input |> imap(\(x, i) {
+
     position = i - 1
     fileno = floor(position / 2)
     if (i %% 2 == 0) {
@@ -16,11 +19,14 @@ flatSystem <- input |> imap(\(x, i) {
     }
 }) |> flatten_chr()
 
-moveOne <- function (diskmap, fromPos, toPos){
-    diskmap[toPos] <<- diskmap[fromPos]
-    return(diskmap[-length(diskmap)])
-}
-
-spaces <- flatSystem |> imap(\(x,i) ifelse(x==".",i,NA)) |> unlist() |> na.omit()
-
-spaces |> map(\(x) flatSystem <<- moveOne(flatSystem, flatSystem[length(flatSystem)], x))
+unused <- fileSystem |> imap(\(x,i) ifelse(x==".",i,NA)) |> unlist() |> na.omit()
+valid  <- fileSystem |> imap(\(x,i) ifelse(x!=".",i,NA)) |> unlist() |> na.omit() |> rev()
+compacted <- fileSystem
+unused |> imap(\(x,i){
+    if(which(compacted ==".")[[1]] < length(valid)){
+        compacted[x] <<- compacted[valid[i]]
+        compacted[valid[i]] <<- "."
+    }
+})
+print(compacted)
+compacted[compacted !="."] |> imap(\(x,i) as.numeric(x) * (i-1) )|> reduce(sum) |> format(scientific = F)
