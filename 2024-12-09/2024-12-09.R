@@ -3,7 +3,7 @@ library(stringr)
 library(dplyr)
 library(purrr)
 
-input<- read_file("2024-12-09/test.txt") |> str_split("") |> pluck(1)
+input <- read_file("2024-12-09/test.txt") |> str_split("") |> pluck(1)
 flatSystem <- input |> imap(\(x, i) {
     position = i - 1
     fileno = floor(position / 2)
