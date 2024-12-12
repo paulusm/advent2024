@@ -5,19 +5,20 @@ library(furrr)
 library(stringr)
 future::plan(multicore)
 #512 72 2024 2 0 2 4 2867 6032
-stones <- read_table("2024-12-11/input.txt", col_names = F) |> t()
-
+stones <- read_table("2024-12-11/input.txt", col_names = F) |> t() |> as.double()
+#str_replace("^0+(?=\\d+)","")) |> 
 blink <- function(st){
-    st |> future_map( \(x) {
-        if(as.double(x) == 0) return("1")
+    st |> map( \(x) {
+        if(x == 0) return(1)
         isEven <- nchar(x) %% 2 == 0
         if(isEven) {
-            theLen <- nchar(x)
+            z <- as.character(x)
+            theLen <- nchar(z)
             # need to remove leading zeros from right half of split
-            return(c(substring(x, 1, theLen/2), substring(x, theLen/2+1) |>
-                         str_replace("^0+(?=\\d+)","")))
+            return(c(substring(z, 1, theLen/2), substring(z, theLen/2+1) |>
+                         as.double()))
         }
-        else return (as.character(as.double(x) * 2024))
+        else return (as.double(x) * 2024)
     }) |> flatten()
 }
 
