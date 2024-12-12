@@ -21,7 +21,7 @@ blink <- function(st){
     }) |> flatten()
 }
 
-for(i in c(1:75)){
+for(i in c(1:25)){
     print(i)
     stones <- blink(stones)
 }
