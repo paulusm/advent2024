@@ -3,7 +3,9 @@ library(stringr)
 library(dplyr)
 library(purrr)
 
-#273 too low
+#273 too low, do we need to then fit short combis first?
+# 234 if no sorting
+# 199 if sort other way round
 
 input <- read_lines("2024-12-19/input.txt")
 
